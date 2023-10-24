@@ -1003,7 +1003,7 @@ phase_5():
   401898:	48 89 e5             	mov    rbp,rsp
   40189b:	53                   	push   rbx
   40189c:	48 83 ec 48          	sub    rsp,0x48
-  4018a0:	48 89 7d b8          	mov    QWORD PTR [rbp-0x48],rdi # char *ptr =str;
+  4018a0:	48 89 7d b8          	mov    QWORD PTR [rbp-0x48],rdi # char= arr =str;
   4018a4:	48 8d 4d cc          	lea    rcx,[rbp-0x34]           # int a;
   4018a8:	48 8d 55 d0          	lea    rdx,[rbp-0x30]           # char* target
   4018ac:	48 8b 45 b8          	mov    rax,QWORD PTR [rbp-0x48]
@@ -1109,15 +1109,15 @@ get_val():
   4019eb:	f3 0f 1e fa          	endbr64 
   4019ef:	55                   	push   rbp
   4019f0:	48 89 e5             	mov    rbp,rsp
-  4019f3:	48 89 7d e8          	mov    QWORD PTR [rbp-0x18],rdi
-  4019f7:	48 8b 45 e8          	mov    rax,QWORD PTR [rbp-0x18]
-  4019fb:	48 8b 00             	mov    rax,QWORD PTR [rax]
-  4019fe:	8b 00                	mov    eax,DWORD PTR [rax]
-  401a00:	89 45 fc             	mov    DWORD PTR [rbp-0x4],eax
-  401a03:	48 8b 45 e8          	mov    rax,QWORD PTR [rbp-0x18]
+  4019f3:	48 89 7d e8          	mov    QWORD PTR [rbp-0x18],rdi   # int *p18 = arr
+  4019f7:	48 8b 45 e8          	mov    rax,QWORD PTR [rbp-0x18]   
+  4019fb:	48 8b 00             	mov    rax,QWORD PTR [rax]     
+  4019fe:	8b 00                	mov    eax,DWORD PTR [rax]         # int a = arr[0]
+  401a00:	89 45 fc             	mov    DWORD PTR [rbp-0x4],eax    # int i4 = arr[0]
+  401a03:	48 8b 45 e8          	mov    rax,QWORD PTR [rbp-0x18]     
   401a07:	48 8b 00             	mov    rax,QWORD PTR [rax]
-  401a0a:	48 8b 50 08          	mov    rdx,QWORD PTR [rax+0x8]
-  401a0e:	48 8b 45 e8          	mov    rax,QWORD PTR [rbp-0x18]
+  401a0a:	48 8b 50 08          	mov    rdx,QWORD PTR [rax+0x8]    # int *ptr1 = initialNodes
+  401a0e:	48 8b 45 e8          	mov    rax,QWORD PTR [rbp-0x18]   
   401a12:	48 89 10             	mov    QWORD PTR [rax],rdx
   401a15:	8b 45 fc             	mov    eax,DWORD PTR [rbp-0x4]
   401a18:	5d                   	pop    rbp
@@ -1137,31 +1137,31 @@ check_answer():
   401a2b:	f3 0f 1e fa          	endbr64 
   401a2f:	55                   	push   rbp
   401a30:	48 89 e5             	mov    rbp,rsp
-  401a33:	48 89 7d e8          	mov    QWORD PTR [rbp-0x18],rdi
+  401a33:	48 89 7d e8          	mov    QWORD PTR [rbp-0x18],rdi   # int= arr = &what?
   401a37:	c7 45 f8 01 00 00 00 	mov    DWORD PTR [rbp-0x8],0x1
-  401a3e:	c7 45 fc 01 00 00 00 	mov    DWORD PTR [rbp-0x4],0x1
+  401a3e:	c7 45 fc 01 00 00 00 	mov    DWORD PTR [rbp-0x4],0x1    # int i = 1;
   401a45:	83 7d fc 05          	cmp    DWORD PTR [rbp-0x4],0x5
   401a49:	7f 44                	jg     401a8f <check_answer+0x64>
-  401a4b:	8b 45 fc             	mov    eax,DWORD PTR [rbp-0x4]
+  401a4b:	8b 45 fc             	mov    eax,DWORD PTR [rbp-0x4]   
   401a4e:	48 98                	cdqe   
   401a50:	48 8d 14 85 00 00 00 	lea    rdx,[rax*4+0x0]
   401a57:	00 
-  401a58:	48 8b 45 e8          	mov    rax,QWORD PTR [rbp-0x18]
-  401a5c:	48 01 d0             	add    rax,rdx
-  401a5f:	8b 10                	mov    edx,DWORD PTR [rax]
+  401a58:	48 8b 45 e8          	mov    rax,QWORD PTR [rbp-0x18]   
+  401a5c:	48 01 d0             	add    rax,rdx                    
+  401a5f:	8b 10                	mov    edx,DWORD PTR [rax]        # int y= arr[i]
   401a61:	8b 45 fc             	mov    eax,DWORD PTR [rbp-0x4]
   401a64:	48 98                	cdqe   
-  401a66:	48 c1 e0 02          	shl    rax,0x2
-  401a6a:	48 8d 48 fc          	lea    rcx,[rax-0x4]
+  401a66:	48 c1 e0 02          	shl    rax,0x2                    # rax = i * 4
+  401a6a:	48 8d 48 fc          	lea    rcx,[rax-0x4]              # rcs = i * 4 - 4
   401a6e:	48 8b 45 e8          	mov    rax,QWORD PTR [rbp-0x18]
-  401a72:	48 01 c8             	add    rax,rcx
-  401a75:	8b 00                	mov    eax,DWORD PTR [rax]
-  401a77:	39 c2                	cmp    edx,eax
-  401a79:	7d 0e                	jge    401a89 <check_answer+0x5e>
-  401a7b:	c7 45 f8 00 00 00 00 	mov    DWORD PTR [rbp-0x8],0x0
+  401a72:	48 01 c8             	add    rax,rcx                    
+  401a75:	8b 00                	mov    eax,DWORD PTR [rax]        # int tmp = arr[i - 1]
+  401a77:	39 c2                	cmp    edx,eax                    = arr[i] = arr[i - 1]
+  401a79:	7d 0e                	jge    401a89 <check_answer+0x5e>     # >= ? goto jmp1
+  401a7b:	c7 45 f8 00 00 00 00 	mov    DWORD PTR [rbp-0x8],0x0        # < ? ret 0;
   401a82:	b8 00 00 00 00       	mov    eax,0x0
   401a87:	eb 0b                	jmp    401a94 <check_answer+0x69>
-  401a89:	83 45 fc 01          	add    DWORD PTR [rbp-0x4],0x1
+  401a89:	83 45 fc 01          	add    DWORD PTR [rbp-0x4],0x1    # jmp1: i++ 
   401a8d:	eb b6                	jmp    401a45 <check_answer+0x1a>
   401a8f:	b8 01 00 00 00       	mov    eax,0x1
   401a94:	5d                   	pop    rbp
@@ -1177,122 +1177,122 @@ build_target():
   401aa2:	41 55                	push   r13
   401aa4:	41 54                	push   r12
   401aa6:	53                   	push   rbx
-  401aa7:	48 83 ec 78          	sub    rsp,0x78
-  401aab:	48 89 bd 68 ff ff ff 	mov    QWORD PTR [rbp-0x98],rdi   # int*ptr = phase_6_nums
-  401ab2:	48 c7 45 90 00 00 00 	mov    QWORD PTR [rbp-0x70],0x0   # int *ptr2 = 0
+  401aa7:	48 83 ec 78          	sub    rsp,0x78                   # rbp - 0xa0
+  401aab:	48 89 bd 68 ff ff ff 	mov    QWORD PTR [rbp-0x98],rdi   # int *p98 = phase_6_nums
+  401ab2:	48 c7 45 90 00 00 00 	mov    QWORD PTR [rbp-0x70],0x0   # int *p70 = 0
   401ab9:	00 
-  401aba:	48 c7 45 88 00 00 00 	mov    QWORD PTR [rbp-0x78],0x0   # int *ptr3 = 0
+  401aba:	48 c7 45 88 00 00 00 	mov    QWORD PTR [rbp-0x78],0x0   # int *p78 = 0
   401ac1:	00 
-  401ac2:	e8 53 ff ff ff       	call   401a1a <build_queue>
-  401ac7:	48 89 45 b8          	mov    QWORD PTR [rbp-0x48],rax   # int *ptr4 = initialNodes + 64
+  401ac2:	e8 53 ff ff ff       	call   401a1a <build_queue>       # ret initialNodes + 64
+  401ac7:	48 89 45 b8          	mov    QWORD PTR [rbp-0x48],rax   # int *p48 = initialNodes + 64
   401acb:	48 8b 45 b8          	mov    rax,QWORD PTR [rbp-0x48]
-  401acf:	48 89 45 90          	mov    QWORD PTR [rbp-0x70],rax   # ptr2 = ptr4
+  401acf:	48 89 45 90          	mov    QWORD PTR [rbp-0x70],rax   # *p70 = *p48
   401ad3:	48 8b 45 b8          	mov    rax,QWORD PTR [rbp-0x48]
-  401ad7:	48 89 45 88          	mov    QWORD PTR [rbp-0x78],rax   # ptr3 = ptr4
-  401adb:	c7 45 c4 00 00 00 00 	mov    DWORD PTR [rbp-0x3c],0x0   # i = 0
+  401ad7:	48 89 45 88          	mov    QWORD PTR [rbp-0x78],rax   # *p78 = *p48
+  401adb:	c7 45 c4 00 00 00 00 	mov    DWORD PTR [rbp-0x3c],0x0   # int i3c i = 0
   401ae2:	83 7d c4 05          	cmp    DWORD PTR [rbp-0x3c],0x5 
   401ae6:	0f 8f 65 01 00 00    	jg     401c51 <build_target+0x1bb>  while (i <= 5)
-  401aec:	48 89 e0             	mov    rax,rsp
-  401aef:	48 89 c3             	mov    rbx,rax
-  401af2:	8b 45 c4             	mov    eax,DWORD PTR [rbp-0x3c]
-  401af5:	48 98                	cdqe   
-  401af7:	48 8d 14 85 00 00 00 	lea    rdx,[rax*4+0x0]
+  401aec:	48 89 e0             	mov    rax,rsp                    # int x = rsp
+  401aef:	48 89 c3             	mov    rbx,rax                        
+  401af2:	8b 45 c4             	mov    eax,DWORD PTR [rbp-0x3c]   # int y = i3c
+  401af5:	48 98                	cdqe                                  
+  401af7:	48 8d 14 85 00 00 00 	lea    rdx,[rax*4+0x0]            # rdx = 4 * i3c
   401afe:	00 
-  401aff:	48 8b 85 68 ff ff ff 	mov    rax,QWORD PTR [rbp-0x98]
-  401b06:	48 01 d0             	add    rax,rdx
-  401b09:	8b 00                	mov    eax,DWORD PTR [rax]        # eax = ptr[i]
-  401b0b:	89 45 b4             	mov    DWORD PTR [rbp-0x4c],eax   # int y = ptr[i]
-  401b0e:	8b 45 b4             	mov    eax,DWORD PTR [rbp-0x4c]
+  401aff:	48 8b 85 68 ff ff ff 	mov    rax,QWORD PTR [rbp-0x98]   # eax = phase_6_nums
+  401b06:	48 01 d0             	add    rax,rdx                    # eax = eax + 4i3c
+  401b09:	8b 00                	mov    eax,DWORD PTR [rax]        # eax = arr[i]
+  401b0b:	89 45 b4             	mov    DWORD PTR [rbp-0x4c],eax   # int i4c = arr[i]
+  401b0e:	8b 45 b4             	mov    eax,DWORD PTR [rbp-0x4c]   # int z = i4c
   401b11:	48 98                	cdqe   
-  401b13:	48 83 e8 01          	sub    rax,0x1                    # rax -= 1
-  401b17:	48 89 45 a8          	mov    QWORD PTR [rbp-0x58],rax   # int z = ptr[i] - 1
-  401b1b:	48 89 c2             	mov    rdx,rax
-  401b1e:	48 83 c2 01          	add    rdx,0x1
-  401b22:	49 89 d4             	mov    r12,rdx
-  401b25:	41 bd 00 00 00 00    	mov    r13d,0x0
-  401b2b:	48 89 c2             	mov    rdx,rax
-  401b2e:	48 83 c2 01          	add    rdx,0x1
-  401b32:	49 89 d6             	mov    r14,rdx
-  401b35:	41 bf 00 00 00 00    	mov    r15d,0x0
-  401b3b:	48 83 c0 01          	add    rax,0x1
-  401b3f:	48 8d 14 85 00 00 00 	lea    rdx,[rax*4+0x0]
+  401b13:	48 83 e8 01          	sub    rax,0x1                    # rax = arr[i] - 1
+  401b17:	48 89 45 a8          	mov    QWORD PTR [rbp-0x58],rax   # int i58 = arr[i] - 1
+  401b1b:	48 89 c2             	mov    rdx,rax                    # rdx = arr[i] - 1
+  401b1e:	48 83 c2 01          	add    rdx,0x1                    # rdx = arr[i] 
+  401b22:	49 89 d4             	mov    r12,rdx                    # r12 = arr[i]
+  401b25:	41 bd 00 00 00 00    	mov    r13d,0x0                   # r13 = 0
+  401b2b:	48 89 c2             	mov    rdx,rax                    # rdx = arr[i] - 1
+  401b2e:	48 83 c2 01          	add    rdx,0x1                    # rdx = arr[i]
+  401b32:	49 89 d6             	mov    r14,rdx                    # r14 = arr[i]
+  401b35:	41 bf 00 00 00 00    	mov    r15d,0x0                   # r15 = 0
+  401b3b:	48 83 c0 01          	add    rax,0x1                    # rax = arr[i]
+  401b3f:	48 8d 14 85 00 00 00 	lea    rdx,[rax*4+0x0]            # rdx = 4 *= arr[i]
   401b46:	00 
-  401b47:	b8 10 00 00 00       	mov    eax,0x10
-  401b4c:	48 83 e8 01          	sub    rax,0x1
-  401b50:	48 01 d0             	add    rax,rdx
-  401b53:	b9 10 00 00 00       	mov    ecx,0x10
-  401b58:	ba 00 00 00 00       	mov    edx,0x0
-  401b5d:	48 f7 f1             	div    rcx
-  401b60:	48 6b c0 10          	imul   rax,rax,0x10
-  401b64:	48 89 c2             	mov    rdx,rax
-  401b67:	48 81 e2 00 f0 ff ff 	and    rdx,0xfffffffffffff000
-  401b6e:	48 89 e6             	mov    rsi,rsp
-  401b71:	48 29 d6             	sub    rsi,rdx
+  401b47:	b8 10 00 00 00       	mov    eax,0x10                   # eax = 0x10
+  401b4c:	48 83 e8 01          	sub    rax,0x1                    # eax = 0xf
+  401b50:	48 01 d0             	add    rax,rdx                    # eax = 4 = arr[i] + 15
+  401b53:	b9 10 00 00 00       	mov    ecx,0x10                   # ecx = 0x10
+  401b58:	ba 00 00 00 00       	mov    edx,0x0                    # edx = 0
+  401b5d:	48 f7 f1             	div    rcx                        # eax = eax / 16, edx = eax % 16
+  401b60:	48 6b c0 10          	imul   rax,rax,0x10               # eax <<= 4  清空低四位
+  401b64:	48 89 c2             	mov    rdx,rax                    # rdx = eax
+  401b67:	48 81 e2 00 f0 ff ff 	and    rdx,0xfffffffffffff000     # rdx = eax & 0xfffffffffffff000 
+  401b6e:	48 89 e6             	mov    rsi,rsp                    # rsi = rsp
+  401b71:	48 29 d6             	sub    rsi,rdx                    # rsi = rsp - (eax & 0xfffffffffffff000)
   401b74:	48 89 f2             	mov    rdx,rsi
-  401b77:	48 39 d4             	cmp    rsp,rdx
-  401b7a:	74 12                	je     401b8e <build_target+0xf8>
-  401b7c:	48 81 ec 00 10 00 00 	sub    rsp,0x1000
+  401b77:	48 39 d4             	cmp    rsp,rdx                      # jmp2: rsp - rdx == rsp? rdx == 0?
+  401b7a:	74 12                	je     401b8e <build_target+0xf8>   # goto jmp1
+  401b7c:	48 81 ec 00 10 00 00 	sub    rsp,0x1000                   # new arr[1000]?
   401b83:	48 83 8c 24 f8 0f 00 	or     QWORD PTR [rsp+0xff8],0x0
   401b8a:	00 00 
-  401b8c:	eb e9                	jmp    401b77 <build_target+0xe1>
-  401b8e:	48 89 c2             	mov    rdx,rax
-  401b91:	81 e2 ff 0f 00 00    	and    edx,0xfff
-  401b97:	48 29 d4             	sub    rsp,rdx
+  401b8c:	eb e9                	jmp    401b77 <build_target+0xe1>   # goto jmp2;
+  401b8e:	48 89 c2             	mov    rdx,rax                      #jmp1: rdx = rax
+  401b91:	81 e2 ff 0f 00 00    	and    edx,0xfff                    # rdx = rax & 0xfff
+  401b97:	48 29 d4             	sub    rsp,rdx                      # rsp = rsp - rax & 0xfff
   401b9a:	48 89 c2             	mov    rdx,rax
-  401b9d:	81 e2 ff 0f 00 00    	and    edx,0xfff
-  401ba3:	48 85 d2             	test   rdx,rdx
-  401ba6:	74 10                	je     401bb8 <build_target+0x122>
-  401ba8:	25 ff 0f 00 00       	and    eax,0xfff
-  401bad:	48 83 e8 08          	sub    rax,0x8
-  401bb1:	48 01 e0             	add    rax,rsp
-  401bb4:	48 83 08 00          	or     QWORD PTR [rax],0x0
-  401bb8:	48 89 e0             	mov    rax,rsp
-  401bbb:	48 83 c0 03          	add    rax,0x3
-  401bbf:	48 c1 e8 02          	shr    rax,0x2
+  401b9d:	81 e2 ff 0f 00 00    	and    edx,0xfff                    # rdx = rax & 0xfff
+  401ba3:	48 85 d2             	test   rdx,rdx                      # rdx & 0
+  401ba6:	74 10                	je     401bb8 <build_target+0x122>  # rdx == 0  goto jmp3:
+  401ba8:	25 ff 0f 00 00       	and    eax,0xfff                    # rax = rax & 0xfff
+  401bad:	48 83 e8 08          	sub    rax,0x8                      # rax = rax - 8
+  401bb1:	48 01 e0             	add    rax,rsp                      # rax = rsp + rax - 8
+  401bb4:	48 83 08 00          	or     QWORD PTR [rax],0x0          # *(rax)
+  401bb8:	48 89 e0             	mov    rax,rsp                      # jmp3  rax = rsp
+  401bbb:	48 83 c0 03          	add    rax,0x3                       # rax = rsp + 3
+  401bbf:	48 c1 e8 02          	shr    rax,0x2                       # rax = (rsp + 3) & ~0x3
   401bc3:	48 c1 e0 02          	shl    rax,0x2
-  401bc7:	48 89 45 a0          	mov    QWORD PTR [rbp-0x60],rax
-  401bcb:	c7 45 c8 00 00 00 00 	mov    DWORD PTR [rbp-0x38],0x0
-  401bd2:	8b 45 c8             	mov    eax,DWORD PTR [rbp-0x38]
-  401bd5:	3b 45 b4             	cmp    eax,DWORD PTR [rbp-0x4c]
-  401bd8:	7d 1f                	jge    401bf9 <build_target+0x163>
-  401bda:	48 8d 45 90          	lea    rax,[rbp-0x70]
-  401bde:	48 89 c7             	mov    rdi,rax
-  401be1:	e8 05 fe ff ff       	call   4019eb <get_val>
-  401be6:	48 8b 55 a0          	mov    rdx,QWORD PTR [rbp-0x60]
-  401bea:	8b 4d c8             	mov    ecx,DWORD PTR [rbp-0x38]
-  401bed:	48 63 c9             	movsxd rcx,ecx
-  401bf0:	89 04 8a             	mov    DWORD PTR [rdx+rcx*4],eax
-  401bf3:	83 45 c8 01          	add    DWORD PTR [rbp-0x38],0x1
-  401bf7:	eb d9                	jmp    401bd2 <build_target+0x13c>
-  401bf9:	8b 45 b4             	mov    eax,DWORD PTR [rbp-0x4c]
-  401bfc:	8d 50 ff             	lea    edx,[rax-0x1]
-  401bff:	48 8b 45 a0          	mov    rax,QWORD PTR [rbp-0x60]
+  401bc7:	48 89 45 a0          	mov    QWORD PTR [rbp-0x60],rax      # int *p60 = rax;
+  401bcb:	c7 45 c8 00 00 00 00 	mov    DWORD PTR [rbp-0x38],0x0      # int i38 = 0
+  401bd2:	8b 45 c8             	mov    eax,DWORD PTR [rbp-0x38]       # loop
+  401bd5:	3b 45 b4             	cmp    eax,DWORD PTR [rbp-0x4c]       # i38 ? i4c  (i4c = arr[i])
+  401bd8:	7d 1f                	jge    401bf9 <build_target+0x163>    # if i38 >= i4c goto Done
+  401bda:	48 8d 45 90          	lea    rax,[rbp-0x70]                 # rax = initialNodes + 64
+  401bde:	48 89 c7             	mov    rdi,rax                        
+  401be1:	e8 05 fe ff ff       	call   4019eb <get_val>               # get_val(initialNodes + 64)
+  401be6:	48 8b 55 a0          	mov    rdx,QWORD PTR [rbp-0x60]       # rdx = p60
+  401bea:	8b 4d c8             	mov    ecx,DWORD PTR [rbp-0x38]       # ecx = i38
+  401bed:	48 63 c9             	movsxd rcx,ecx          
+  401bf0:	89 04 8a             	mov    DWORD PTR [rdx+rcx*4],eax      # p60[i38] = eax
+  401bf3:	83 45 c8 01          	add    DWORD PTR [rbp-0x38],0x1       # i38++
+  401bf7:	eb d9                	jmp    401bd2 <build_target+0x13c>    # goto loop:
+  401bf9:	8b 45 b4             	mov    eax,DWORD PTR [rbp-0x4c]       # Done: eax = i4c(大概率= arr[i])
+  401bfc:	8d 50 ff             	lea    edx,[rax-0x1]                  # edx = arr[i] - 1
+  401bff:	48 8b 45 a0          	mov    rax,QWORD PTR [rbp-0x60]       # rax = p60
   401c03:	48 63 d2             	movsxd rdx,edx
-  401c06:	8b 14 90             	mov    edx,DWORD PTR [rax+rdx*4]
-  401c09:	8b 45 c4             	mov    eax,DWORD PTR [rbp-0x3c]
+  401c06:	8b 14 90             	mov    edx,DWORD PTR [rax+rdx*4]      # edx = p6= arr[i] - 1
+  401c09:	8b 45 c4             	mov    eax,DWORD PTR [rbp-0x3c]       # eax = i3c
   401c0c:	48 98                	cdqe   
-  401c0e:	89 94 85 70 ff ff ff 	mov    DWORD PTR [rbp+rax*4-0x90],edx
-  401c15:	8b 45 b4             	mov    eax,DWORD PTR [rbp-0x4c]
-  401c18:	83 e8 01             	sub    eax,0x1
-  401c1b:	89 45 cc             	mov    DWORD PTR [rbp-0x34],eax
-  401c1e:	83 7d cc 00          	cmp    DWORD PTR [rbp-0x34],0x0
-  401c22:	78 21                	js     401c45 <build_target+0x1af>
-  401c24:	48 8b 45 a0          	mov    rax,QWORD PTR [rbp-0x60]
-  401c28:	8b 55 cc             	mov    edx,DWORD PTR [rbp-0x34]
-  401c2b:	48 63 d2             	movsxd rdx,edx
-  401c2e:	8b 14 90             	mov    edx,DWORD PTR [rax+rdx*4]
-  401c31:	48 8d 45 88          	lea    rax,[rbp-0x78]
+  401c0e:	89 94 85 70 ff ff ff 	mov    DWORD PTR [rbp+rax*4-0x90],edx   # p90[i] = edx
+  401c15:	8b 45 b4             	mov    eax,DWORD PTR [rbp-0x4c]         # eax = i4c
+  401c18:	83 e8 01             	sub    eax,0x1                          # eax = i4c - 1
+  401c1b:	89 45 cc             	mov    DWORD PTR [rbp-0x34],eax         # int i34 = i4c - 1
+  401c1e:	83 7d cc 00          	cmp    DWORD PTR [rbp-0x34],0x0         # loop2  i34 ? 0     
+  401c22:	78 21                	js     401c45 <build_target+0x1af>      # if i34 < 0 goto jmp5
+  401c24:	48 8b 45 a0          	mov    rax,QWORD PTR [rbp-0x60]         # rax = p60
+  401c28:	8b 55 cc             	mov    edx,DWORD PTR [rbp-0x34]         # edx = i34(i4c - 1)
+  401c2b:	48 63 d2             	movsxd rdx,edx                        
+  401c2e:	8b 14 90             	mov    edx,DWORD PTR [rax+rdx*4]        # edx = p60[i34]
+  401c31:	48 8d 45 88          	lea    rax,[rbp-0x78]                   # rax = p78
   401c35:	89 d6                	mov    esi,edx
   401c37:	48 89 c7             	mov    rdi,rax
-  401c3a:	e8 7c fd ff ff       	call   4019bb <put_val>
-  401c3f:	83 6d cc 01          	sub    DWORD PTR [rbp-0x34],0x1
-  401c43:	eb d9                	jmp    401c1e <build_target+0x188>
-  401c45:	48 89 dc             	mov    rsp,rbx
-  401c48:	83 45 c4 01          	add    DWORD PTR [rbp-0x3c],0x1
+  401c3a:	e8 7c fd ff ff       	call   4019bb <put_val>                 # put_val(p78, p60[i34])
+  401c3f:	83 6d cc 01          	sub    DWORD PTR [rbp-0x34],0x1         # i34--
+  401c43:	eb d9                	jmp    401c1e <build_target+0x188>      # goto loop2:
+  401c45:	48 89 dc             	mov    rsp,rbx                          # jmp5
+  401c48:	83 45 c4 01          	add    DWORD PTR [rbp-0x3c],0x1         # i3c++;
   401c4c:	e9 91 fe ff ff       	jmp    401ae2 <build_target+0x4c>
   401c51:	48 8d 85 70 ff ff ff 	lea    rax,[rbp-0x90]               # loopDone:
-  401c58:	48 89 c7             	mov    rdi,rax
-  401c5b:	e8 cb fd ff ff       	call   401a2b <check_answer>
+  401c58:	48 89 c7             	mov    rdi,rax                      # rdi = p90
+  401c5b:	e8 cb fd ff ff       	call   401a2b <check_answer>        # check_answer(p90)
   401c60:	88 45 9f             	mov    BYTE PTR [rbp-0x61],al
   401c63:	0f b6 45 9f          	movzx  eax,BYTE PTR [rbp-0x61]
   401c67:	48 8d 65 d8          	lea    rsp,[rbp-0x28]
@@ -1316,7 +1316,7 @@ phase_6():
   401c91:	48 89 c7             	mov    rdi,rax
   401c94:	e8 0d 05 00 00       	call   4021a6 <read_six_numbers>
   401c99:	48 8d 05 f0 46 00 00 	lea    rax,[rip+0x46f0]        # 406390 <phase_6_nums>
-  401ca0:	48 89 45 f0          	mov    QWORD PTR [rbp-0x10],rax   # int* ptr = phase_6_nums
+  401ca0:	48 89 45 f0          	mov    QWORD PTR [rbp-0x10],rax   # int= arr = phase_6_nums
   401ca4:	c7 45 fc 00 00 00 00 	mov    DWORD PTR [rbp-0x4],0x0    # int i = 0;
   401cab:	83 7d fc 05          	cmp    DWORD PTR [rbp-0x4],0x5      # i < 6
   401caf:	7f 40                	jg     401cf1 <phase_6+0x7b>        # goto Done;
@@ -1346,9 +1346,9 @@ phase_6():
   401cf8:	e8 99 fd ff ff       	call   401a96 <build_target>        # phase_6_num
   401cfd:	88 45 ef             	mov    BYTE PTR [rbp-0x11],al
   401d00:	0f b6 45 ef          	movzx  eax,BYTE PTR [rbp-0x11]  
-  401d04:	83 f0 01             	xor    eax,0x1                    # eax == 1
+  401d04:	83 f0 01             	xor    eax,0x1                    # eax == 1? CLEAR!!
   401d07:	84 c0                	test   al,al
-  401d09:	74 05                	je     401d10 <phase_6+0x9a>      # al == 0
+  401d09:	74 05                	je     401d10 <phase_6+0x9a>      # al == 0? bomb
   401d0b:	e8 38 03 00 00       	call   402048 <explode_bomb>
   401d10:	90                   	nop
   401d11:	c9                   	leave  
