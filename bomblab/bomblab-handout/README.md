@@ -1,6 +1,3 @@
-## ICS lab2: B0mblab
-### 李希文 22307130256
-------
 ##### phase_1
 进入 `phase_1`，注意到函数 `string_not_equal`， 且传递参数之一为 `"Computer science is not a boring subject"`，检验通过。
 
@@ -69,10 +66,9 @@ int hope(int n)
 ##### phase_5
 注意到通过在反汇编时选用 —C 选项可以反汇编出 C++ 风格的类及其方法。
 本题考察虚函数的相关知识：对于一个含有虚函数的类，首地址将会是一个虚函数表，类通过这个虚函数表来调用虚函数。通过分析，可以首先得出三个有效字符串分别是：`杀杀杀！`、`退退退。`、`冲冲冲~`，在这之后根据字符串调用构造函数 `worldline*::worldline*`。接下来主程序通过虚函数表调用方法 `worldline*::dmail(int)`。跟进不同的 `dmail(int)` 中，发现对于三条世界线分别需要将 dmail 发送到 `2018`、`2021`或者 `2023` 年。最后主函数调用 `worldline::is_phase5_passable`,实测发现只有当为世界线 3 的时候才为真，故得到最终答案 `冲冲冲~ 2023`。
-值得注意的是 `sscanf` 的格式化串为 `%s %d` ，有实现栈溢出攻击的可能。
 
 ##### phase_6
-主程序中调用了 `read_six_numbers`，并且根据后面的判断可以发现这六个数字需要在 `[0, 6` 范围内。且如果 `build_target` 函数返回 `1` 则可以通过。
+主程序中调用了 `read_six_numbers`，并且根据后面的判断可以发现这六个数字需要在 `[0, 6]` 范围内。且如果 `build_target` 函数返回 `1` 则可以通过。
 
 进入 `build_target` 函数，传入参数为 `arr[i]`。 注意到对 `arr[i]` 有一个大循环，最后是通过一个 `check_answer`来确定是否通过，参数是 `$rbp - 0x90`， 推测为结果数组，要求这个数组满足递增性。
 
@@ -86,7 +82,7 @@ int get_val(Node **pptr)
     return a;
 }
 ```
-可以理解为获取当前指针的值，并将指针向前移动一位。这个操作会执行 `arr[i]` 次，所获得的结果会被存到一个局部数组 `localArr[]`中。接下来这个 `localArr[arr[i]]` 被存入了 `res[i]`。之后便进入了一个 `put_val` 的循环。`put_val` 的参数调用 `get_val` 之前指针的位置。可以写出C风格代码
+可以理解为获取当前指针的值，并将指针向前移动一位。这个操作会执行 `arr[i]` 次，所获得的结果会被存到一个局部数组 `localArr[]`中。接下来这个 `localArr[arr[i]]` 被存入了 `res[i]`。之后便进入了一个 `put_val` 的循环。`put_val` 的参数调用 `get_val` 之前指针的位置。可以写出C风格代码：
 ```c
 void put_val(Node **pptr, int val)
 {
@@ -106,9 +102,19 @@ void put_val(Node **pptr, int val)
 ##### secret_phase
 由 `phase_3` 知需要利用栈溢出攻击，观察 `main.cpp` 中的 `read_line()` ，可以发现这个函数会对 `a[0] ~ a[40]` 进行写入，而主程序中的 `buffer[40]`，有可能发生溢出。查看汇编代码，发现刚好能够发生栈溢出。在 `password.txt` 的某一行之后添加空格即可。
 
-进入 `secret_phase`，跟随执行，可以发现 `sscanf` 的格式化字符串为 `%ud`，输入测试数据 `114514` 进行测试。发现接下来的操作是比较 `in ^ 0xdeadc0de` 与 `0xbaadf00d`，需要成功才能够通过。根据异或的性质，进行运算 `0xbaadf00d ^ 0xdeadc0de = 1677734099`。
+注意到反汇编代码有一段类似于混淆的操作，静态分析失效，利用动态分析。
+```asm
+  401dc5:	eb ff                	jmp    401dc6 <secret_phase+0x11>       # 跳转的地址并非下一条指令
+  401dc7:	c0 48 8d 3d          	ror    BYTE PTR [rax-0x73],0x3d         # 利用 jmp 来打乱代码顺序局部性
+  401dcb:	45 15 00 00 e8 2c    	rex.RB adc eax,0x2ce80000
+  401dd1:	f4                   	hlt    
+  401dd2:	ff                   	(bad)  
+  401dd3:	ff c7                	inc    edi
+  401dd5:	45 fc                	rex.RB cld 
+  401dd7:	de c0                	faddp  st(0),st
+  401dd9:	ad                   	lods   eax,DWORD PTR ds:[rsi]
+  401dda:	de 48 8d             	fimul  WORD PTR [rax-0x73]
+```
 
-填入答案，通过 ~~并成功击败jwc，破除 30% A~~。
-
-##### 感受
-`bomblab` 就这样结束了，甚至有点空虚呢。~~警惕新型电子杨威~~
+进入 `secret_phase`，跟随执行，可以发现 `sscanf` 的格式化字符串为 `%ud`，输入测试数据 `114514` 进行测试。发现接下来的操作是比较 `in ^ 0xdeadc0de` 与 `0xbaadf00d`，需要相等才能够通过。根据异或的性质，进行运算 `0xbaadf00d ^ 0xdeadc0de = 1677734099`。
+ 
